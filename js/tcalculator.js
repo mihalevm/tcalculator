@@ -60,9 +60,7 @@ var tcalculator = function(){
             var p_sum = 0;
             var i_discharge = 0;
 
-            $(['pcurrent', 'premove', 'pproj']).each(function (i, o) {
-                p_sum += parseFloat($('#'+o).val());
-            });
+            p_sum = parseFloat($('#pcurrent').val()) - parseFloat($('#premove').val()) + parseFloat($('#pproj').val());
 
             i_discharge = p_sum/__const_voltage_discharge[$('#voltage option:selected').val()];
 
