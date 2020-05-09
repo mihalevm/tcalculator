@@ -1,0 +1,22 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+    padding-top: 3%;
+}
+
+.header .nav-wrapper {
+    padding-left: 1%;
+}
+
+.page-footer {
+    padding-top: 0;
+}
+
+.chart-wrapper {
+    display: none;
+}

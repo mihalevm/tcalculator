@@ -1,0 +1,15 @@
+[
+  {"tid":"1", "id":"1", "name":"OPzS"},
+  {"tid":"2", "id":"1", "name":"OPzV"},
+  {"tid":"3", "id":"1", "name":"FT"  },
+
+  {"tid":"4", "id":"2", "name":"OPzS"},
+  {"tid":"5", "id":"2", "name":"OPzV"},
+  {"tid":"6", "id":"2", "name":"FT"  },
+
+  {"tid":"7", "id":"3", "name":"OPzS"},
+  {"tid":"8", "id":"3", "name":"OPzV"},
+  {"tid":"9", "id":"3", "name":"FT"  },
+
+  {"tid":"10", "id":"4", "name":"Другие"}
+]

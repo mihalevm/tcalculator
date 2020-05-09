@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <link type="text/css" rel="stylesheet" href="css/tcalculator.css" media="screen,projection"/>
+    </head>
+    <body>
+        <header class="header">
+            <nav>
+                <div class="nav-wrapper">
+                    <a href="#" class="brand-logo">Расчет времени разряда АКБ</a>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <div class="container">
+                <div class="row">
+                    <div class="input-field col s4">
+                        <select id="voltage" required="" aria-required="true" class="validate">
+                            <option value="">Выберите напряжение</option>
+                            <option value="48">48</option>
+                            <option value="60">60</option>
+                        </select>
+                        <label>Электропитающая установка, В</label>
+                    </div>
+                    <div class="input-field col s4">
+                        <input placeholder="0 Вт" id="pcurrent" type="text" class="validate right-align" required="" aria-required="true">
+                        <label for="pcurrent">Существующая мощность, Вт</label>
+                    </div>
+                    <div class="input-field col s4">
+                        <input placeholder="0 Вт" id="psumm" type="text" class="validate right-align" disabled>
+                        <label for="psumm">Суммарная мощность, Вт</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s4">
+                        <select id="vendor">
+                            <option value="">Выберите производителя</option>
+                        </select>
+                        <label>Производитель АКБ</label>
+                    </div>
+                    <div class="input-field col s4">
+                        <input placeholder="0 Вт" id="premove" type="text" class="validate right-align" required="" aria-required="true">
+                        <label for="premove">Демонтируемая мощность, Вт</label>
+                    </div>
+                    <div class="input-field col s4">
+                        <input placeholder="" id="treserv" type="text" class="validate right-align" disabled>
+                        <label for="treserv">Время резервирования</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s4">
+                        <select id="btype" disabled>
+                            <option value="">Выберите тип</option>
+                        </select>
+                        <label>Тип АКБ</label>
+                    </div>
+                    <div class="input-field col s4">
+                        <input placeholder="0 Вт" id="pproj" type="text" class="validate right-align" required="" aria-required="true">
+                        <label for="pproj">Проектная мощность, Вт</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s4">
+                        <select id="bcapacity" disabled>
+                            <option value="">Выберите емкость</option>
+                        </select>
+                        <label>Емкостной номинал АКБ, Ач</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s4">
+                        <select id="bgroups">
+                            <option value="">Выберите кол-во груп</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                        <label>Количество груп АКБ</label>
+                    </div>
+                    <div class="col offset-s4 s4 right-align">
+                        <a class="waves-effect waves-light btn" id="calculate">Расчитать</a>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="chart-wrapper">
+                    <canvas id="canvas" style="display: block; width: 611px; height: 305px;" width="611" height="305"></canvas>
+                </div>
+            </div>
+        </main>
+
+        <footer class="page-footer">
+            <div class="footer-copyright">
+                <div class="container">© 2020 No Any Copyright</div>
+            </div>
+        </footer>
+
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mask.min.js"></script>
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+        <script type="text/javascript" src="js/chart.min.js"></script>
+        <script type="text/javascript" src="js/tcalculator.js"></script>
+    </body>
+</html>
