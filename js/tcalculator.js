@@ -14,22 +14,66 @@ var tcalculator = function(){
         return num;
     }
 
+    function __reset_selection(sel){
+        $('#'+sel+' option').each(function (i, o) {
+            if (!isNaN(parseInt($(o).val()))){
+                $(o).remove();
+            }
+        })
+    }
+
+    function __disable_selection(sel, flg) {
+        $('#'+sel).prop("disabled", flg);
+        $('#'+sel).formSelect();
+    }
+
     return {
         init: function () {
-            tcalculator.loadVendors();
-//todo: remove
             $('select').formSelect();
 
             $('#premove').mask('00000');
             $('#pcurrent').mask('00000');
             $('#pproj').mask('00000');
+
+            $('#calculate').click(function () {
+                if (tcalculator.validate()){
+                    tcalculator.calculateTime();
+                }
+            });
+
+            $('#reset').click(function () {
+                $(['vendor', 'btype', 'bcapacity', 'bgroups']).each(function (i, o) {
+                    __reset_selection(o);
+                    __disable_selection(o, true);
+                });
+
+                $('#voltage').val('');
+                $('#voltage').formSelect();
+
+                $(['pcurrent', 'premove', 'pproj','psumm', 'treserv']).each(function (i, o) {
+                    $('#'+o).val('');
+                });
+
+                $('.chart-wrapper').hide();
+            });
+
+            $('#voltage').change(function () {
+                if (!isNaN(parseInt($('#voltage').val()))) {
+                    tcalculator.loadVendors();
+                } else {
+                    $(['vendor', 'btype', 'bcapacity', 'bgroups']).each(function (i, o) {
+                        __reset_selection(o);
+                        __disable_selection(o, true);
+                    });
+                }
+            });
         },
         resetValidation: function(){
             $('.chart-wrapper').hide();
 
             $(['voltage', 'vendor', 'btype', 'bcapacity', 'bgroups']).each(function (i, o) {
                 $('#'+o).parent().find('input:first').removeClass('invalid');
-            })
+            });
 
             $(['pcurrent', 'premove', 'pproj']).each(function (i, o) {
                     $('#'+o).removeClass('invalid');
@@ -57,12 +101,8 @@ var tcalculator = function(){
             return is_validate;
         },
         calculateTime:function () {
-            var p_sum = 0;
-            var i_discharge = 0;
-
-            p_sum = parseFloat($('#pcurrent').val()) - parseFloat($('#premove').val()) + parseFloat($('#pproj').val());
-
-            i_discharge = p_sum/__const_voltage_discharge[$('#voltage option:selected').val()];
+            var p_sum       = parseFloat($('#pcurrent').val()) - parseFloat($('#premove').val()) + parseFloat($('#pproj').val());
+            var i_discharge = p_sum/__const_voltage_discharge[$('#voltage option:selected').val()];
 
             console.log('Ток разряда Ip:'+i_discharge);
 
@@ -127,7 +167,7 @@ var tcalculator = function(){
                         }
                     }
 
-                })
+                });
 
                 return tres;
             }
@@ -138,8 +178,7 @@ var tcalculator = function(){
             if (!isNaN(vid) && parseInt(vid)>0){
                 tcalculator.loadBatteryTypes(vid);
             } else {
-                $('#btype').prop("disabled", true);
-                $('#btype').formSelect();
+                __disable_selection('btype', true);
             }
         },
         onBattetyTypeSelected: function() {
@@ -149,59 +188,87 @@ var tcalculator = function(){
             if (!isNaN(vid) && !isNaN(tid) && parseInt(vid)>0 && parseInt(tid)>0){
                 tcalculator.loadBatteryParams(vid, tid);
             } else {
-                $('#bcapacity').prop("disabled", true);
-                $('#bcapacity').formSelect();
+                __disable_selection('bcapacity', true);
             }
         },
         loadBatteryParams: function (vid, tid) {
             $.get('data/battery_params.json', {}, function (bparams_list) {
+                __reset_selection('bcapacity');
+
                 __battery_params_list = bparams_list;
 
-                $('#bcapacity option').each(function (i, o) {
-                    if (!isNaN(parseInt($(o).val()))){
-                        $(o).remove();
-                    }
-                })
                 $(bparams_list).each(function (i,o) {
                     if (o.vid === vid && o.tid === tid) {
                         $('#bcapacity').append('<option value="' + o.pid+ '">' + o.capacity + '</option>');
                     }
                 }).promise().done(function () {
-                    $('#bcapacity').prop("disabled", false);
-                    $('#bcapacity').formSelect();
+                    __disable_selection('bcapacity', false);
+
+                    $('#bcapacity').change(function () {
+                        if (!isNaN(parseInt($('#bcapacity').val()))) {
+                            tcalculator.loadBatteryGroups();
+                        } else {
+                            $(['bgroups']).each(function (i, o) {
+                                __reset_selection(o);
+                                __disable_selection(o, true);
+                            });
+                        }
+                    });
                 });
             });
         },
         loadBatteryTypes: function(vid){
             $.get('data/battery_types.json', {}, function (btypes_list) {
-                $('#btype option').each(function (i, o) {
-                    if (!isNaN(parseInt($(o).val()))){
-                        $(o).remove();
-                    }
-                })
+                __reset_selection('btype');
+
                 $(btypes_list).each(function (i,o) {
                     if (o.id === vid) {
                         $('#btype').append('<option value="' + o.tid + '">' + o.name + '</option>');
                     }
                 }).promise().done(function () {
-                    $('#btype').prop("disabled", false);
-                    $('#btype').formSelect();
-                    $('#btype').change(function (o) {
-                        tcalculator.onBattetyTypeSelected();
+                    __disable_selection('btype', false);
+
+                    $('#btype').change(function () {
+                        if (!isNaN(parseInt($('#btype').val()))) {
+                            tcalculator.onBattetyTypeSelected();
+                        } else {
+                            $(['bcapacity', 'bgroups']).each(function (i, o) {
+                                __reset_selection(o);
+                                __disable_selection(o, true);
+                            });
+                        }
                     });
                 });
             });
         },
         loadVendors: function () {
             $.get('data/battery_vendors.json', {}, function (vendor_list) {
+                __reset_selection('vendor');
+
                 $(vendor_list).each(function (i,o) {
                     $('#vendor').append('<option value="'+o.id+'">'+o.vendor+'</option>');
                 }).promise().done(function () {
-                    $('#vendor').formSelect();
-                    $('#vendor').change(function (o) {
-                        tcalculator.onVendorSelected();
+                    __disable_selection('vendor', false);
+
+                    $('#vendor').change(function () {
+                        if (!isNaN(parseInt($('#vendor').val()))) {
+                            tcalculator.onVendorSelected();
+                        } else {
+                            $(['btype', 'bcapacity', 'bgroups']).each(function (i, o) {
+                                __reset_selection(o);
+                                __disable_selection(o, true);
+                            });
+                        }
                     });
                 })
+            });
+        },
+        loadBatteryGroups: function () {
+            __reset_selection('bgroups');
+            $([1,2,3,4]).each(function (i,o) {
+                $('#bgroups').append('<option value="'+o+'">'+o+'</option>');
+            }).promise().done(function () {
+                __disable_selection('bgroups', false);
             });
         }
     }
@@ -209,12 +276,6 @@ var tcalculator = function(){
 
 $(document).ready(function(){
     tcalculator.init();
-
-    $('#calculate').click(function () {
-        if (tcalculator.validate()){
-            tcalculator.calculateTime();
-        };
-    });
 
     window.myLine = new Chart(document.getElementById('canvas').getContext('2d'), config);
 });
@@ -271,4 +332,4 @@ var config = {
             text: ''
         }
     }
-}
+};
