@@ -240,7 +240,7 @@ let tcalculator = function() {
 
                 $(bparams_list).each(function (i,o) {
                     if (o.vid === vid && o.tid === tid) {
-                        $('#bcapacity').append('<option value="' + o.pid+ '">' + o.capacity + '</option>');
+                        $('#bcapacity').append('<option value="' + o.pid+ '">' + o.capacity + ' (' + o.name + ')' + '</option>');
                     }
                 }).promise().done(function () {
                     __disable_selection('bcapacity', false);
