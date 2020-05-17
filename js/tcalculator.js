@@ -98,15 +98,18 @@ let tcalculator = function() {
                 $('.chart-wrapper').hide();
             });
 
-            $('#voltage').change(function () {
+            $('#voltage').change(function (e, o) {
                 if (!isNaN(parseInt($('#voltage').val()))) {
-                    tcalculator.loadVendors();
+                    if (isNaN(parseInt($('#voltage').data('pvalue')))){
+                        tcalculator.loadVendors();
+                    }
                 } else {
                     $(['vendor', 'btype', 'bcapacity', 'bgroups']).each(function (i, o) {
                         __reset_selection(o);
                         __disable_selection(o, true);
                     });
                 }
+                $('#voltage').data('pvalue', $('#voltage').val());
             });
         },
         resetValidation: function(){
@@ -292,14 +295,12 @@ let tcalculator = function() {
                     __disable_selection('vendor', false);
 
                     $('#vendor').change(function () {
-                        if (!isNaN(parseInt($('#vendor').val()))) {
+                        $(['btype', 'bcapacity', 'bgroups']).each(function (i, o) {
+                            __reset_selection(o);
+                            __disable_selection(o, true);
+                        }).promise().done(function () {
                             tcalculator.onVendorSelected();
-                        } else {
-                            $(['btype', 'bcapacity', 'bgroups']).each(function (i, o) {
-                                __reset_selection(o);
-                                __disable_selection(o, true);
-                            });
-                        }
+                        });
                     });
                 })
             });
